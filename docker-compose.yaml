@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  app:
+    build: 
+        context: web
+        dockerfile: Dockerfile
+    image: celsopires/learning-golang-web
+    container_name: app
+    volumes:
+        - ./web:/go/src/
+    tty: true
+    ports: 
+        - "8080:8080"
+    depends_on:
+        - db
+
+  db:
+    build: 
+        context: mysql
+        dockerfile: Dockerfile
+    image: celsopires/learning-golang-db
+    command: --innodb-use-native-aio=0
+    container_name: db
+    restart: always
+    tty: true
+    volumes: 
+        - ./mysql/dbdata:/var/lib/mysql
+    environment: 
+        - MYSQL_DATABASE=go_course
+        - MYSQL_ROOT_PASSWORD=root
+        
